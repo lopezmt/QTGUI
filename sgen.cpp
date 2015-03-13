@@ -20,7 +20,7 @@ SGen::~SGen(){
 void SGen::generateClass() {
     std::ofstream savehstream;
     QString headerFileName = QDir(this->directory.c_str()).filePath((this->filename+".h").c_str());
-    savehstream.open(headerFileName.toStdString(),std::ios::out);
+    savehstream.open(headerFileName.toStdString().c_str(),std::ios::out);
     qDebug()<<headerFileName;
 
     try{
@@ -63,7 +63,7 @@ void SGen::generateClass() {
 
     std::ofstream savesstream;
     QString cppFileName = QDir(this->directory.c_str()).filePath((this->filename+".cpp").c_str());
-    savesstream.open(cppFileName.toStdString(),std::ios::out);
+    savesstream.open(cppFileName.toStdString().c_str(),std::ios::out);
 
     try{
         if(savesstream.is_open()) {

@@ -21,7 +21,7 @@ void MGen::generateClass()
 {
     std::ofstream headerstream;
     QString headerFileName = QDir(this->directory.c_str()).filePath((this->filename+".h").c_str());
-    headerstream.open(headerFileName.toStdString(),std::ios::out);
+    headerstream.open(headerFileName.toStdString().c_str(),std::ios::out);
 
     qDebug()<<headerFileName;
 
@@ -39,7 +39,7 @@ void MGen::generateClass()
 
     std::ofstream sourcestream;
     QString sourceFileName = QDir(this->directory.c_str()).filePath((this->filename+".cpp").c_str());
-    sourcestream.open(sourceFileName.toStdString(),std::ios::out);
+    sourcestream.open(sourceFileName.toStdString().c_str(),std::ios::out);
     
 
     try{
