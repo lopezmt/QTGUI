@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+<title>QtToCppXML</title>
+<description>Generates a loader, a saver, and a protocol file from a Qt interface file (*.ui).</description>
+<category>Miscellaneous</category>
+<version>1.0</version>
+<contributor>Francois Budin (UNC)</contributor>
+<acknowledgements></acknowledgements>
+  <parameters>
+    <label>I/O</label>
+    <directory>
+      <name>directory</name>
+      <description>Output directory</description>
+      <label>Output directory</label>
+      <channel>output</channel>
+      <longflag>output_directory</longflag>
+      <flag>d</flag>
+    </directory>
+    <file fileExtensions=".ui">
+      <name>uifileuri</name>
+      <description>Qt GUI file</description>
+      <label>Qt UI file</label>
+      <channel>input</channel>
+      <longflag>ui_file</longflag>
+      <flag>u</flag>
+    </file>
+    <string>
+      <name>savername</name>
+      <description>Saver Class Name</description>
+      <label>Saver Class Name</label>
+      <channel>input</channel>
+      <longflag>saver_name</longflag>
+      <flag>s</flag>
+      <default>saver</default>
+    </string>
+    <string>
+      <name>loadername</name>
+      <description>Loader Class Name</description>
+      <label>Loader Class Name</label>
+      <channel>input</channel>
+      <longflag>loader_name</longflag>
+      <flag>l</flag>
+      <default>loader</default>
+    </string>
+    <string>
+      <name>modelname</name>
+      <description>Model Class Name</description>
+      <label>Model Class Name</label>
+      <channel>input</channel>
+      <longflag>model_name</longflag>
+      <flag>m</flag>
+      <default>model</default>
+    </string>
+  </parameters>
+</executable>
