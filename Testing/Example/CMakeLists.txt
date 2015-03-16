@@ -1,19 +1,18 @@
 cmake_minimum_required(VERSION 2.8.10)
 
-project(QTGUIExample)
+set(MyProjectName QTGUIExample)
+
+project(MyProjectName)
+
+find_package(QtToCppXML REQUIRED)
+include(${QtToCppXML_USE_FILE})
 
 find_package(Qt4 REQUIRED)
 include(${QT_USE_FILE})
 
 set( MySources
-loader.cpp
-loader.h
 main.cpp
 mainwindow.cpp
-model.cpp
-model.h
-saver.cpp
-saver.h
 )
 
 include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} )
@@ -26,6 +25,9 @@ MySources
 ${QtProject_HEADERS_MOC}
 ${UI_FILES}
 )
+
+
+QtToCppXML( MySources ${MyProjectName} mainwindow.ui )
 
 add_executable( QTGUIExample ${MySources} )
 target_link_libraries( QTGUIExample ${QT_LIBRARIES})

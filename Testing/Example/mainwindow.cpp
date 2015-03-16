@@ -1,11 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "QTGUIExampleLoad.h"
+#include "QTGUIExampleSave.h"
+#include "QTGUIExampleModel.h"
 
-#include "saver.h"
-#include "model.h"
 #include <QDebug>
-
-#include "loader.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,12 +21,12 @@ MainWindow::~MainWindow()
 
 
 // set model
-void MainWindow::setModel(model m){
+void MainWindow::setModel(QTGUIExampleModel m){
     this->m = m;
 }
 
 // get model
-model MainWindow::getModel(){
+QTGUIExampleModel MainWindow::getModel(){
     return m;
 }
 
@@ -68,7 +67,7 @@ void MainWindow::on_pushButton_clicked()
 
     m.setspinBox(ui->spinBox->value());
 
-    saver save;
+    QTGUIExampleSave save;
     save.save(m);
 
 }
@@ -77,7 +76,7 @@ void MainWindow::on_pushButton_clicked()
 // - Updates the GUI with data from the model
 void MainWindow::on_pushButton_2_clicked()
 {
-    loader loader;
+    QTGUIExampleLoad loader;
     loader.load(m);
 
 

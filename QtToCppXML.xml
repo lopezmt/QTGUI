@@ -31,7 +31,7 @@
       <channel>input</channel>
       <longflag>saver_name</longflag>
       <flag>s</flag>
-      <default>saver</default>
+      <default>save</default>
     </string>
     <string>
       <name>loadername</name>
@@ -40,7 +40,7 @@
       <channel>input</channel>
       <longflag>loader_name</longflag>
       <flag>l</flag>
-      <default>loader</default>
+      <default>load</default>
     </string>
     <string>
       <name>modelname</name>

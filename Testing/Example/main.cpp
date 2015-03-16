@@ -1,8 +1,8 @@
 
 #include <QApplication>
-#include "model.h"
-#include "saver.h"
-#include "loader.h"
+#include "QTGUIExampleModel.h"
+#include "QTGUIExampleSave.h"
+#include "QTGUIExampleLoad.h"
 
 #include "mainwindow.h"
 
@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     MainWindow w;
-    model m;
+    QTGUIExampleModel m;
     w.setModel(m);
     w.show();
 

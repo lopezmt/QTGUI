@@ -23,5 +23,17 @@ sgen.h
 
 GENERATECLP(MySources QtToCppXML.xml)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${QtToCppXML_BINARY_DIR}/bin)
+
 add_executable( QtToCppXML ${MySources} )
 target_link_libraries( QtToCppXML ${QT_LIBRARIES})
+
+# --------------------------------------------------------------------------
+# Configure support files
+# --------------------------------------------------------------------------  
+configure_file(
+  QtToCppXML.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/QtToCppXML.cmake
+  @ONLY
+  )
+include(GenerateQtToCppXMLConfig.cmake)
