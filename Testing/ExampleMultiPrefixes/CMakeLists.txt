@@ -27,7 +27,7 @@ ${UI_FILES}
 )
 
 
-QtToCppXML( MySources ${MyProjectName} mainwindow.ui "")
+QtToCppXML( SOURCES MySources NAME ${MyProjectName} UIXML_FILE mainwindow.ui PREFIXES post_ pre_ )
 
 add_executable( QTGUIExample ${MySources} )
 target_link_libraries( QTGUIExample ${QT_LIBRARIES})

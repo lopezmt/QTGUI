@@ -185,7 +185,7 @@ p, li { white-space: pre-wrap; }
      <double>5.000000000000000</double>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spinBox">
+   <widget class="QSpinBox" name="post_spinBox">
     <property name="geometry">
      <rect>
       <x>320</x>

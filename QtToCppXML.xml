@@ -51,5 +51,14 @@
       <flag>m</flag>
       <default>model</default>
     </string>
+    <string-vector>
+      <name>prefixes</name>
+      <description>prefixes of the different parameter types. One may want to create different parameter/loader/saver classes for different types of parameters (e.g.: software, input parameters, etc)</description>
+      <label>prefixes</label>
+      <channel>input</channel>
+      <longflag>prefixes</longflag>
+      <flag>x</flag>
+      <default></default>
+    </string-vector>
   </parameters>
 </executable>

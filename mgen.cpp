@@ -3,10 +3,12 @@
 //constructor
 MGen::MGen( std::map< std::pair < QString , QString > , QString > & hmap ,
             std::string directory ,
-            std::string filename
+            std::string filename ,
+            std::string prefix
           )
-    :hmap(hmap),filename(filename),directory(directory)
+    :hmap(hmap),filename(prefix+filename),directory(directory)
 {
+  m_prefix = prefix ;
 }
 
 //destructor

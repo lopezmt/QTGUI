@@ -1,8 +1,4 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "QTGUIExampleLoad.h"
-#include "QTGUIExampleSave.h"
-#include "QTGUIExampleModel.h"
 
 #include <QDebug>
 
@@ -47,7 +43,7 @@ void MainWindow::on_pushButton_clicked()
     QString txt2 = ui->textEdit_2->toPlainText();
     m.settextEdit_2(txt2);
 
-    m.setcheckBoxsdf(ui->checkBoxsdf->isChecked());
+    m.setpre_checkBoxsdf(ui->pre_checkBoxsdf->isChecked());
 
     m.setcomboBox(ui->comboBox->currentText());
 
@@ -63,12 +59,13 @@ void MainWindow::on_pushButton_clicked()
 
     m.setradioButton_2(ui->radioButton_2->isChecked());
 
-    m.setradioButton_3(ui->radioButton_3->isChecked());
+    m.setpost_radioButton_3(ui->post_radioButton_3->isChecked());
 
     m.setspinBox(ui->spinBox->value());
 
     QTGUIExampleSave save;
-    save.save(m);
+    std::string filename = "data1.xml";
+    save.save(m,filename);
 
 }
 
@@ -77,10 +74,11 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_2_clicked()
 {
     QTGUIExampleLoad loader;
-    loader.load(m);
+    std::string filename = "data1.xml";
+    loader.load(m,filename);
 
 
-    ui->checkBoxsdf->setChecked(m.getcheckBoxsdf());
+    ui->pre_checkBoxsdf->setChecked(m.getpre_checkBoxsdf());
 
  //   ui->comboBox->setCurrentText(m.getcomboBox());//qt4->qt5
 
@@ -96,7 +94,7 @@ void MainWindow::on_pushButton_2_clicked()
 
     ui->radioButton_2->setChecked(m.getradioButton_2());
 
-    ui->radioButton_3->setChecked( m.getradioButton_3());
+    ui->post_radioButton_3->setChecked( m.getpost_radioButton_3());
 
     ui->spinBox->setValue(m.getspinBox());
 

@@ -47,6 +47,7 @@ class SGen{
     std::string filename;
     std::string directory;
     std::string modelclass;
+    std::string m_prefix ;
 
 public:
 
@@ -54,7 +55,8 @@ public:
     SGen( std::map< std::pair< QString , QString > , QString > & hmap ,
           std::string modelclass ,
           std::string directory = "" ,
-          std::string filename = "saver"
+          std::string filename = "saver" ,
+          std::string prefix = ""
         ) ;
 
     //destructor

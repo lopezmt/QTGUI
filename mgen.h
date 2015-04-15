@@ -42,14 +42,16 @@ class MGen{
     //name of the header file to be generated
     std::string filename;
     //directory the file should be stored in
-    std::string directory;
+    std::string directory ;
+    std::string m_prefix ;
 
 public:
 
     //constructor
     MGen( std::map< std::pair< QString , QString > , QString > & hmap ,
           std::string directory = "" ,
-          std::string filename = "model"
+          std::string filename = "model" ,
+          std::string prefix = ""
         ) ;
 
     //destructor

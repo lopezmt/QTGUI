@@ -2,9 +2,15 @@
 
 
 //constructor
-SGen:: SGen(std::map<std::pair<QString,QString>,QString> & hmap,std::string modelclass, std::string directory,std::string filename)
-    :hmap(hmap),directory(directory), filename(filename),modelclass(modelclass){
-
+SGen::SGen( std::map < std::pair < QString , QString > , QString > & hmap ,
+            std::string modelclass ,
+            std::string directory ,
+            std::string filename ,
+            std::string prefix
+          )
+    :hmap(hmap),directory(directory), filename(prefix+filename),modelclass(prefix+modelclass)
+{
+  m_prefix = prefix ;
 
 }
 
@@ -112,8 +118,8 @@ void SGen::genMethod(std::ofstream & savestream, bool isHeader) {
     int tab_index=1;
 
     //generate method signature
-    genMethodLine(savestream,"void "+(isHeader? ("save("+this->modelclass+"& m);")
-                                             :(filename+"::save("+this->modelclass+"& m){")),tab_index);
+    genMethodLine(savestream,"void "+(isHeader? ("save("+this->modelclass+"& m , std::string filename );")
+                                             :(filename+"::save("+this->modelclass+"& m , std::string filename){")),tab_index);
 
 
     //do not generate the rest if not header
@@ -127,7 +133,7 @@ void SGen::genMethod(std::ofstream & savestream, bool isHeader) {
 
     //generate the file
     genMethodLine(savestream,"//First, address the appropriate instantiate",tab_index);
-    genMethodLine( savestream,"QFile file(\"data.xml\");",tab_index);
+    genMethodLine( savestream,"QFile file(filename.c_str());",tab_index);
 
     //open the file
     genMethodLine(savestream,"if(!file.open(QIODevice::WriteOnly)){",tab_index);
@@ -177,9 +183,8 @@ void SGen::genSavetoXMLMethod(std::ofstream & savestream,std::map<std::pair<QStr
     genMethodLine(savestream,"writer.writeStartDocument();\n\n",tab_index);
 
     //parent namespace and
-    genMethodLine(savestream,"writer.writeStartElement(\"m:ModelData\");",tab_index);
-    genMethodLine(savestream,"writer.writeNamespace(\"https://github.com/QTGUIFolks/QTGUI\",\"m\");",tab_index);
-
+    std::string saverElement = std::string("writer.writeStartElement(\"" ) + m_prefix.c_str() + "Parameters\"" + ");" ;
+    genMethodLine(savestream,saverElement,tab_index);
 
 
     bool void_pointer=false;
@@ -187,7 +192,7 @@ void SGen::genSavetoXMLMethod(std::ofstream & savestream,std::map<std::pair<QStr
     while(it != hmap.end()) {
 
         //generate
-        genMethodLine(savestream,"writer.writeEmptyElement(\"m:Data\");",tab_index);
+        genMethodLine(savestream,"writer.writeEmptyElement(\"Parameter\");",tab_index);
 
         //Type attribute
         genMethodLine(savestream,"writer.writeAttribute(\"type\",\""+std::string(it->second.toUtf8().constData())+"\");",tab_index);

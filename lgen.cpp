@@ -6,13 +6,15 @@
 LGen::LGen( std::map< std::pair< QString , QString > , QString > & hmap ,
             std::string modelclass ,
             std::string directory ,
-            std::string filename
+            std::string filename ,
+            std::string prefix
           )
 {
 this->m_map = hmap ;
-this->m_modelclass = modelclass ;
+this->m_modelclass = prefix + modelclass ;
 this->m_directory = directory ;
-this->m_filename = filename ;
+this->m_filename = prefix + filename ;
+this->m_prefix = prefix ;
 }
 
 void LGen::generateClass()
@@ -23,18 +25,18 @@ void LGen::generateClass()
     {
         QDebug out(&loaderh);
 
-        out.nospace() << std::string("#ifndef "+this->m_filename+"_H\n").data();
-        out.nospace() << std::string("#define "+this->m_filename+"_H\n\n").data();
+        out.nospace() << std::string("#ifndef "+this->m_filename+"_H\n").c_str();
+        out.nospace() << std::string("#define "+this->m_filename+"_H\n\n").c_str();
 
         out.nospace() << "#include <QCoreApplication>\n#include <QString>\n";
         out.nospace() << "#include <QDebug>\n#include <map>\n";
         out.nospace() << "#include <QFile>\n";
-        out.nospace() << std::string("#include \""+this->m_modelclass+".h\"\n").data();
+        out.nospace() << std::string("#include \""+this->m_modelclass+".h\"\n").c_str();
         out.nospace() << "#include <QXmlStreamReader>\n";
 
         out.nospace() << "\n\n";
         out.nospace() << "class ";
-        out.nospace() << this->m_filename.data();
+        out.nospace() << this->m_filename.c_str();
         out.nospace() << "{";
         out.nospace() << "\n\n";
 
@@ -42,9 +44,9 @@ void LGen::generateClass()
         out.nospace() << "\tQString tmpClassName;\n";
         out.nospace() << "\tQString tmpClassType;\n";
 
-        out.nospace() << std::string("public:\n").data();
+        out.nospace() << std::string("public:\n").c_str();
 
-        out.nospace() << std::string("\n\t"+this->m_modelclass+" load("+this->m_modelclass+"& model);\n").data();
+        out.nospace() << std::string("\n\t"+this->m_modelclass+" load("+this->m_modelclass+"& model , std::string filename );\n").c_str();
 
 
         out.nospace() << "\n};\n";
@@ -65,9 +67,9 @@ void LGen::generateClass()
     {
         QDebug out(&loaders);
 
-        out.nospace() << std::string("#include \""+this->m_filename+".h\"").data();
+        out.nospace() << std::string("#include \""+this->m_filename+".h\"").c_str();
 
-        out.nospace() << std::string("\n\n\t"+this->m_modelclass+" "+this->m_filename+"::load("+this->m_modelclass+"& model)\n\t{\n").data();
+        out.nospace() << std::string("\n\n\t"+this->m_modelclass+" "+this->m_filename+"::load("+this->m_modelclass+"& model , std::string filename)\n\t{\n").c_str();
 
         out.nospace() << "\t\tstd::map<std::pair<QString, QString>, QString> xmlTokens;\n";
         out.nospace() << "\t\ttypedef std::map<std::pair<QString, QString>, QString> Dict;\n";
@@ -75,7 +77,7 @@ void LGen::generateClass()
 
 
 
-        out.nospace() << "\t\tQFile* data = new QFile(\"data.xml\");\n";
+        out.nospace() << "\t\tQFile* data = new QFile(filename.c_str());\n";
         out.nospace() << "\t\tif (!data->open(QIODevice::ReadOnly | QIODevice::Text)) \n\t\t{\n";
         out.nospace() << "\t\t\tqDebug() << \"Not read only\";\n";
         out.nospace() << "\t\t}\n\n";

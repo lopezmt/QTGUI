@@ -14,12 +14,15 @@ private:
     std::string m_filename ;
     std::string m_modelclass ;
     std::string m_directory ;
+    std::string m_prefix ;
 
 public:
     //    //constructor
     LGen( std::map<std::pair<QString,QString>,QString> & hmap ,
           std::string modelclass ,
-          std::string directory="",std::string filename = "loader"
+          std::string directory="",
+          std::string filename = "loader",
+          std::string prefix=""
         ) ;
 
     void generateClass() ;
