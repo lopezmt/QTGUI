@@ -17,12 +17,12 @@ MainWindow::~MainWindow()
 
 
 // set model
-void MainWindow::setModel(QTGUIExampleModel m){
+void MainWindow::setModel(Model_QTGUIExample m){
     this->m = m;
 }
 
 // get model
-QTGUIExampleModel MainWindow::getModel(){
+Model_QTGUIExample MainWindow::getModel(){
     return m;
 }
 
@@ -63,7 +63,7 @@ void MainWindow::on_pushButton_clicked()
 
     m.setspinBox(ui->spinBox->value());
 
-    QTGUIExampleSave save;
+    Save_QTGUIExample save;
     std::string filename = "data1.xml";
     save.save(m,filename);
 
@@ -73,7 +73,7 @@ void MainWindow::on_pushButton_clicked()
 // - Updates the GUI with data from the model
 void MainWindow::on_pushButton_2_clicked()
 {
-    QTGUIExampleLoad loader;
+    Load_QTGUIExample loader;
     std::string filename = "data1.xml";
     loader.load(m,filename);
 

@@ -3,9 +3,9 @@
 
 #include <QMainWindow>
 #include "ui_mainwindow.h"
-#include "QTGUIExampleLoad.h"
-#include "QTGUIExampleSave.h"
-#include "QTGUIExampleModel.h"
+#include "Load_QTGUIExample.h"
+#include "Save_QTGUIExample.h"
+#include "Model_QTGUIExample.h"
 
 
 namespace Ui {
@@ -17,14 +17,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    QTGUIExampleModel m;
+    Model_QTGUIExample m;
 
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
     // getter and setter for the model
-    void setModel(QTGUIExampleModel m_pre);
-    QTGUIExampleModel getModel();
+    void setModel(Model_QTGUIExample m_pre);
+    Model_QTGUIExample getModel();
 
 private slots:
     void on_pushButton_clicked();
