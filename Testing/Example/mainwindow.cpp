@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <QDebug>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -63,6 +64,13 @@ void MainWindow::on_pushButton_clicked()
 
     m.setspinBox(ui->spinBox->value());
 
+    std::map<QString,bool> itemList ;
+    for( int i = 0 ; i < ui->listWidget->count() ; i++ )
+    {
+      QListWidgetItem *currentItem = ui->listWidget->item(i) ;
+      itemList[ currentItem->text() ] = static_cast<bool>(currentItem->checkState() ) ;
+    }
+    m.setlistWidget(itemList) ;
     Save_QTGUIExample save;
     std::string filename = "data1.xml";
     save.save(m,filename);
@@ -111,4 +119,14 @@ void MainWindow::on_pushButton_2_clicked()
 
     QString txt2 = m.gettextEdit_2();
     ui->textEdit_2->setText(txt2);
+
+
+    std::map<QString,bool> itemList ;
+    itemList = m.getlistWidget() ;
+    ui->listWidget->clear() ;
+    for( std::map<QString,bool>::iterator it = itemList.begin() ; it != itemList.end() ; it++ )
+    {
+      QListWidgetItem *item = new QListWidgetItem( it->first , ui->listWidget ) ;
+      item->setCheckState( it->second != 0 ? Qt::Checked : Qt::Unchecked ) ;
+    }
 }
