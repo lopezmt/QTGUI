@@ -90,33 +90,34 @@ void MGen::genSource(std::ofstream & sourcestream)
 
 }
 
+void MGen::AdditionalIncludeLibraries( std::ofstream & headerstream , QString headerName )
+{
+    if( usedHeader.find( headerName ) == usedHeader.end() ) //try to find the header first
+    {
+         headerstream << "#include <" << headerName.toStdString() << ">" << std::endl ; // put it into the header
+         usedHeader.insert( headerName ) ; //put into set
+    }
+}
 
 void MGen::genIncludes(std::ofstream & headerstream)
 {
     //get iterator from begin
     MapType::const_iterator it=hmap.begin();
-
-
     while(it != hmap.end())
     {
-
-
         //compare the value type to the header QString for now, see if both are same string, aka when compare returns 0
-        if(QString("QString").compare(it->second)==0 &&
-
-                //try to find the header first
-                (usedHeader.find(it->second) == usedHeader.end())) {
-
-            headerstream<<"#include <"<<it->second.toStdString()
-                      <<">"<<std::endl<<std::endl;
-
-            //put into set
-            usedHeader.insert(it->second);
+        if( (it->second).compare( "QString" ) == 0 )
+        {
+          AdditionalIncludeLibraries( headerstream , "QString" ) ;
         }
-
+        if( (it->second).compare( "std::map<QString,bool>" ) == 0 )
+        {
+          AdditionalIncludeLibraries( headerstream , "QString" ) ;
+          AdditionalIncludeLibraries( headerstream , "map" ) ;
+        }
         it++;
     }
-
+    headerstream << std::endl ;
 }
 
 

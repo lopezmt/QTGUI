@@ -38,19 +38,9 @@
 //the same directory
 class SGen{
 
-    const std::map<std::pair<QString,QString>,QString> & hmap;
-    //file stream to print out to model file
-
-    //headers that have been used
-    std::set<QString> usedHeader;
-
-    std::string filename;
-    std::string directory;
-    std::string modelclass;
-    std::string m_prefix ;
-
 public:
 
+    typedef std::map<std::pair<QString,QString>,QString> MapType ;
     //constructor
     SGen( std::map< std::pair< QString , QString > , QString > & hmap ,
           std::string modelclass ,
@@ -84,6 +74,13 @@ private:
     //method to generate the saver method to write out the model values upon save
     void genSavetoXMLMethod(std::ofstream & savestream,std::map<std::pair<QString,QString>,QString>::const_iterator & it, int tab_index, bool isHeader);
 
+    const MapType & hmap;
+    //file stream to print out to model file
+
+    std::string filename;
+    std::string directory;
+    std::string modelclass;
+    std::string m_prefix ;
 
 
 };

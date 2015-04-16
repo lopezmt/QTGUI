@@ -48,37 +48,24 @@ int Parser::parseXML( std::map< std::pair< QString , QString > , QString> & m )
                     || widgetType.compare("QLineEdit") == 0)
                 {
                     m[std::make_pair(widgetType, widgetName)] = "QString";
-//                    qDebug() << xml.attributes().at(0).value();     // Class type
-//                    qDebug() << xml.attributes().at(1).value();     // Class name
                 }
-
                 else if (widgetType.compare("QCheckBox") == 0
                          || widgetType.compare("QRadioButton") == 0)
                 {
                     m[std::make_pair(widgetType, widgetName)] = "bool";
-//                    qDebug() << xml.attributes().at(0).value();     // Class type
-//                    qDebug() << xml.attributes().at(1).value();     // Class name
                 }
-
                 else if (widgetType.compare("QDoubleSpinBox") == 0)
                 {
                     m[std::make_pair(widgetType, widgetName)] = "double";
-//                    qDebug() << xml.attributes().at(0).value();     // Class type
-//                    qDebug() << xml.attributes().at(1).value();     // Class name
                 }
-
                 else if (widgetType.compare("QSpinBox") == 0
                          || widgetType.compare("QScrollBar") == 0)
                 {
                     m[std::make_pair(widgetType, widgetName)] = "int";
-//                    qDebug() << xml.attributes().at(0).value();     // Class type
-//                    qDebug() << xml.attributes().at(1).value();     // Class name
                 }
-
                 else if (widgetType.compare("QListWidget") == 0)
                 {
-                    qDebug() << xml.attributes().at(0).value();     // Class type
-                    qDebug() << xml.attributes().at(1).value();     // Class name
+                    m[std::make_pair(widgetType, widgetName)] = "std::map<QString,bool>";
                 }
                 // Store values into the dictionary
     //            m[std::make_pair(widgetType, xml.attributes().at(1).value().toString())] = "";

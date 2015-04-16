@@ -63,6 +63,8 @@ private:
     //generate the source file
     void genSource(std::ofstream& sourcestream);
 
+    //include additional libraries to header 
+    void AdditionalIncludeLibraries( std::ofstream & headerstream , QString headerName );
 
     //generates fields
     void genField(std::ofstream & headerstream);

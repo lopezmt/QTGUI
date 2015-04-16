@@ -112,7 +112,7 @@ void SGen::genField(std::ofstream & savehstream){
 //generate the save method in the saver
 void SGen::genMethod(std::ofstream & savestream, bool isHeader) {
     //get iterator from begin
-    std::map<std::pair<QString,QString>,QString>::const_iterator it=hmap.begin();
+    MapType::const_iterator it=hmap.begin();
 
     //used to determine amount of tab needed to properly indent this line
     int tab_index=1;
@@ -163,7 +163,7 @@ void SGen::genMethodLine(std::ofstream & savestream,std::string s,int tab_amount
     savestream<<s<<std::endl;
 }
 
-void SGen::genSavetoXMLMethod(std::ofstream & savestream,std::map<std::pair<QString,QString>,QString>::const_iterator & it, int tab_index, bool isHeader) {
+void SGen::genSavetoXMLMethod(std::ofstream & savestream,MapType::const_iterator & it, int tab_index, bool isHeader) {
 
 
     //first generate the method signature
@@ -190,84 +190,45 @@ void SGen::genSavetoXMLMethod(std::ofstream & savestream,std::map<std::pair<QStr
     bool void_pointer=false;
     //recusively generate the tag for data
     while(it != hmap.end()) {
-
         //generate
         genMethodLine(savestream,"writer.writeEmptyElement(\"Parameter\");",tab_index);
-
         //Type attribute
-        genMethodLine(savestream,"writer.writeAttribute(\"type\",\""+std::string(it->second.toUtf8().constData())+"\");",tab_index);
-
+        genMethodLine(savestream,"writer.writeAttribute(\"type\",\""+std::string(it->second.toStdString())+"\");",tab_index);
         //convert qstring to string
-        genMethodLine(savestream,"writer.writeAttribute(\"name\",\""+std::string(it->first.second.toUtf8().constData())+"\");",tab_index);
-
-
-
-
-        //qDebug()<<QString::fromStdString(to_string(it->second.compare(QString("QString"))));
-
+        genMethodLine(savestream,"writer.writeAttribute(\"name\",\""+std::string(it->first.second.toStdString())+"\");",tab_index);
         //value attribute generation
-
         //saves data, falls under different cases
-        if(it->second.compare(QString("string"))==0) {
-            //convert to qstring first
-            genMethodLine(savestream,"writer.writeAttribute(\"value\",QString::fromStdString(m.get"+std::string(it->first.second.toUtf8().constData())+"()));",tab_index);
-
-        } else if(it->second.compare(QString("QString"))==0) {
+        if( !it->second.compare( "QString" ) )
+        {
             //can just output the qstring
-            genMethodLine(savestream,"writer.writeAttribute(\"value\",m.get"+std::string(it->first.second.toUtf8().constData())+"());",tab_index);
-
-
-        } else if(!(it->second.compare(QString("int")) && it->second.compare(QString("double"))
-                  && it->second.compare(QString("bool")))) {
-            //can just output the qstring
-            genMethodLine(savestream,"writer.writeAttribute(\"value\",QString::number(m.get"+std::string(it->first.second.toUtf8().constData())+"()));",tab_index);
-
-        } else {
-            //extremely bad way to do this
-
-            //convert all data type with same size as long or less to a long and print as string
-            if(!void_pointer) {
-                genMethodLine(savestream,"//Enagaging hacky void pointer method of saving",tab_index);
-
-                //void can be used as an intermediate to convert anything to another type
-                //genMethodLine("void* pointer;",tab_index);
-
-                //now it exists, don't need to redeclare
-                void_pointer=true;
-            }
-
-            //genMethodLine("pointer=reinterpret_cast<void*>(&m.get"+std::string(it->first.second.toUtf8().constData())+"());",tab_index);
-
-            //check if the value object is less or equal to the long type. We can save it as a long. Else discard
-            genMethodLine(savestream,"if(sizeof(m.get"+std::string(it->first.second.toUtf8().constData())+"())<=sizeof(long)) {\n",tab_index++);
-            genMethodLine(savestream,"//Don't care about the value, as long as it is less in memory size than an long, we can save it as a long",tab_index);
-
-            //convert to string
-            genMethodLine(savestream,"writer.writeAttribute(\"value\",QString::fromStdString(std::to_string(m.get"+std::string(it->first.second.toUtf8().constData())+"())));",tab_index--);
-
-            // genMethodLine("writer.writeAttribute(\"value\",QString::fromStdString(std::to_string(*(static_cast<long*>(pointer)))));",tab_index--);
-            genMethodLine(savestream,"} else {",tab_index++);
-            //else for error handling
-            genMethodLine(savestream,"//Generate error if the value is too big to fit",tab_index);
-            genMethodLine(savestream,"writer.writeAttribute(\"value\",\"Error: Invalid attribute value\");",tab_index--);
-            genMethodLine(savestream,"}",tab_index);
-
-
+            genMethodLine(savestream,"writer.writeAttribute(\"value\",m.get"+std::string(it->first.second.toStdString())+"());",tab_index);
         }
-
-
-        //genMethodLine("if(sizeof(m.get"+std::string(it->first.second.toUtf8().constData())+"))));",tab_index);
-        //genMethodLine("writer.writeAttribute(\"value\",QString::fromStdString(to_string(static_cast<long long> (m.get"+std::string(it->first.second.toUtf8().constData())+"))));",tab_index);
-
-
+        else if( !it->second.compare( "int" )
+                || !it->second.compare( "double" )
+                || !it->second.compare( "bool" )
+               )
+        {
+            //can just output the qstring
+            genMethodLine(savestream,"writer.writeAttribute(\"value\",QString::number(m.get"+std::string(it->first.second.toStdString())+"()));",tab_index);
+        }
+        else if( !it->second.compare( "std::map<QString,bool>" ) )
+        {
+            genMethodLine(savestream,"std::map<QString,bool> map = m.get"+std::string(it->first.second.toStdString())+"();",tab_index);
+            genMethodLine(savestream,"std::map<QString,bool>::iterator it = map.begin();",tab_index);
+            genMethodLine(savestream,"for( int count = 0 ; it != map.end() ; count++ , it++ )",tab_index);
+            genMethodLine(savestream,"{",tab_index);
+            genMethodLine(savestream, "std::string item = \"item\" + QString::number(count).toStdString() ;" , tab_index + 1 ) ;
+            genMethodLine(savestream, "std::string itemName = item+\"Name\" ;" , tab_index + 1 ) ;
+            genMethodLine(savestream,"writer.writeAttribute(itemName.c_str(),it->first);",tab_index+1);
+            genMethodLine(savestream, "std::string itemState = item+\"isChecked\" ;" , tab_index + 1 ) ;
+            genMethodLine(savestream,"writer.writeAttribute(itemState.c_str(),QString::number(it->second));",tab_index+1);
+            genMethodLine(savestream,"}",tab_index);
+        }
         it++;
     }
-
     genMethodLine(savestream,"writer.writeEndElement();\n",tab_index);
-
     //end document
     genMethodLine(savestream,"writer.writeEndDocument();\n",tab_index);
-
     tab_index--;
     //close the method
     genMethodLine(savestream,"}",tab_index);
