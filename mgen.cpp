@@ -1,7 +1,7 @@
 #include "mgen.h"
 
 //constructor
-MGen::MGen( std::map< std::pair < QString , QString > , QString > & hmap ,
+MGen::MGen( MapType & hmap ,
             std::string directory ,
             std::string filename ,
             std::string prefix
@@ -9,6 +9,7 @@ MGen::MGen( std::map< std::pair < QString , QString > , QString > & hmap ,
     :hmap(hmap),filename(prefix+filename),directory(directory)
 {
   m_prefix = prefix ;
+  m_indent = "  " ;
 }
 
 //destructor
@@ -93,7 +94,7 @@ void MGen::genSource(std::ofstream & sourcestream)
 void MGen::genIncludes(std::ofstream & headerstream)
 {
     //get iterator from begin
-    std::map<std::pair<QString,QString>,QString>::const_iterator it=hmap.begin();
+    MapType::const_iterator it=hmap.begin();
 
 
     while(it != hmap.end())
@@ -101,16 +102,16 @@ void MGen::genIncludes(std::ofstream & headerstream)
 
 
         //compare the value type to the header QString for now, see if both are same string, aka when compare returns 0
-        if(std::string("QString").compare(it->second.toUtf8().constData())==0 &&
+        if(QString("QString").compare(it->second)==0 &&
 
                 //try to find the header first
-                (usedHeader.find(it->second.toUtf8().constData()) == usedHeader.end())) {
+                (usedHeader.find(it->second) == usedHeader.end())) {
 
-            headerstream<<"#include <"<<it->second.toUtf8().constData()
+            headerstream<<"#include <"<<it->second.toStdString()
                       <<">"<<std::endl<<std::endl;
 
             //put into set
-            usedHeader.insert(it->second.toUtf8().constData());
+            usedHeader.insert(it->second);
         }
 
         it++;
@@ -123,14 +124,14 @@ void MGen::genIncludes(std::ofstream & headerstream)
 void MGen::genField(std::ofstream & headerstream)
 {
     //get iterator from begin
-    std::map<std::pair<QString,QString>,QString>::const_iterator it=hmap.begin();
+    MapType::const_iterator it=hmap.begin();
 
 
     while(it != hmap.end())
     {
 
-        headerstream<<"\t"<<it->second.toUtf8().constData()<<" "
-                  <<it->first.second.toUtf8().constData()<<";"<<std::endl;
+        headerstream<<m_indent<<it->second.toStdString()<<" "
+                  <<it->first.second.toStdString()<<";"<<std::endl;
 
 
 
@@ -144,7 +145,7 @@ void MGen::genField(std::ofstream & headerstream)
 void MGen::genGetSet(std::ofstream & headerstream,bool headeronly)
 {
     //get iterator from begin
-    std::map<std::pair<QString,QString>,QString>::const_iterator it=hmap.begin();
+    MapType::const_iterator it=hmap.begin();
 
     //while the point did not hit the end of the map
     while(it != hmap.end()) {
@@ -162,12 +163,12 @@ void MGen::genGetSet(std::ofstream & headerstream,bool headeronly)
 
 }
 
-void MGen::genGet(std::map<std::pair<QString,QString>,QString>::const_iterator & it, std::ofstream & stream,bool headeronly)
+void MGen::genGet(MapType::const_iterator & it, std::ofstream & stream,bool headeronly)
 {
     //generate Type getVarName();
-   stream<<"\t"<<it->second.toUtf8().constData()<<" "<<(headeronly?"":this->filename+"::")
+   stream<<m_indent<<it->second.toStdString()<<" "<<(headeronly?"":this->filename+"::")
               <<"get"
-             <<it->first.second.toUtf8().constData()<<"()";
+             <<it->first.second.toStdString()<<"()";
 
     //Now depending on whether we are generating header or not
     if(headeronly)
@@ -183,21 +184,21 @@ void MGen::genGet(std::map<std::pair<QString,QString>,QString>::const_iterator &
     }
 
     //generate body of getter
-    stream<<"\t\treturn "<<
-                 it->first.second.toUtf8().constData()<<";"<<std::endl;
+    stream<<m_indent<<m_indent<<"return "<<
+                 it->first.second.toStdString()<<";"<<std::endl;
 
     //end it
-    stream<<"\t}"<<std::endl;
+    stream<<m_indent<<"}"<<std::endl;
 
 }
 
-void MGen::genSet(std::map<std::pair<QString,QString>,QString>::const_iterator & it, std::ofstream & stream, bool headeronly)
+void MGen::genSet(MapType::const_iterator & it, std::ofstream & stream, bool headeronly)
 {
     //generate Type setVarName(Type a);
-    stream<<"\tvoid "<<(headeronly?"":this->filename+"::")
+    stream<<m_indent<<"void "<<(headeronly?"":this->filename+"::")
               <<"set"
-             <<it->first.second.toUtf8().constData()<<"("
-            <<it->second.toUtf8().constData()
+             <<it->first.second.toStdString()<<"("
+            <<it->second.toStdString()
            <<" a"
           <<")";
 
@@ -215,12 +216,12 @@ void MGen::genSet(std::map<std::pair<QString,QString>,QString>::const_iterator &
     }
 
     //generate body of setter
-    stream<<"\t\t"<<
-                 it->first.second.toUtf8().constData()<<"=a;"
+    stream<<m_indent<<m_indent<<
+                 it->first.second.toStdString()<<"=a;"
               <<std::endl;
 
     //end it
-    stream<<"\t}"<<std::endl;
+    stream<<m_indent<<"}"<<std::endl;
 
 }
 

@@ -10,140 +10,126 @@ LGen::LGen( std::map< std::pair< QString , QString > , QString > & hmap ,
             std::string prefix
           )
 {
-this->m_map = hmap ;
-this->m_modelclass = prefix + modelclass ;
-this->m_directory = directory ;
-this->m_filename = prefix + filename ;
-this->m_prefix = prefix ;
+    m_map = hmap ;
+    m_modelclass = prefix + modelclass ;
+    m_directory = directory ;
+    m_filename = prefix + filename ;
+    m_prefix = prefix ;
+    m_indent = "  " ;
 }
 
 void LGen::generateClass()
 {
-    QString headerFileName = QDir(this->m_directory.c_str()).filePath((this->m_filename+".h").c_str());
-    QFile loaderh(headerFileName);
-    if (loaderh.open(QFile::WriteOnly | QFile::Truncate))
+    QString headerFileName = QDir( m_directory.c_str() ).filePath( ( m_filename + ".h" ).c_str() ) ;
+    QFile loaderh( headerFileName ) ;
+    if( loaderh.open( QFile::WriteOnly | QFile::Truncate ) )
     {
-        QDebug out(&loaderh);
+        QTextStream out( &loaderh ) ;
+        out << "#ifndef " << m_filename.c_str() << "_H\n" ;
+        out << "#define " << m_filename.c_str() << "_H\n\n" ;
 
-        out.nospace() << std::string("#ifndef "+this->m_filename+"_H\n").c_str();
-        out.nospace() << std::string("#define "+this->m_filename+"_H\n\n").c_str();
+        out << "#include <QCoreApplication>\n#include <QString>\n" ;
+        out << "#include <QDebug>\n#include <map>\n" ;
+        out << "#include <QFile>\n" ;
+        out << "#include \"" << m_modelclass.c_str() << ".h\"\n" ;
+        out << "#include <QXmlStreamReader>\n" ;
 
-        out.nospace() << "#include <QCoreApplication>\n#include <QString>\n";
-        out.nospace() << "#include <QDebug>\n#include <map>\n";
-        out.nospace() << "#include <QFile>\n";
-        out.nospace() << std::string("#include \""+this->m_modelclass+".h\"\n").c_str();
-        out.nospace() << "#include <QXmlStreamReader>\n";
-
-        out.nospace() << "\n\n";
-        out.nospace() << "class ";
-        out.nospace() << this->m_filename.c_str();
-        out.nospace() << "{";
-        out.nospace() << "\n\n";
-
-
-        out.nospace() << "\tQString tmpClassName;\n";
-        out.nospace() << "\tQString tmpClassType;\n";
-
-        out.nospace() << std::string("public:\n").c_str();
-
-        out.nospace() << std::string("\n\t"+this->m_modelclass+" load("+this->m_modelclass+"& model , std::string filename );\n").c_str();
+        out << "\n\n" ;
+        out << "class " ;
+        out << m_filename.c_str() ;
+        out << "{" ;
+        out << "\n\n" ;
 
 
-        out.nospace() << "\n};\n";
-        out.nospace() << "#endif";
+        out << m_indent << "QString tmpClassName;\n" ;
+        out << m_indent << "QString tmpClassType;\n" ;
+
+        out << "public:\n" ;
+
+        out << "\n" << m_indent << m_modelclass.c_str() << " load(" << m_modelclass.c_str() << "& model , std::string filename );\n" ;
+
+        out << "\n};\n" ;
+        out << "#endif" ;
     }
     else
     {
-        qDebug()<<"Loader failed to open";
-
+        qDebug() << "Loader failed to open" ;
     }
-
-    loaderh.close();
+    loaderh.close() ;
 
     //source file
-    QString sourceFileName = QDir(this->m_directory.c_str()).filePath((this->m_filename+".cpp").c_str());
-    QFile loaders(sourceFileName);
-    if (loaders.open(QFile::WriteOnly | QFile::Truncate))
+    QString sourceFileName = QDir( m_directory.c_str() ).filePath(( m_filename + ".cpp" ).c_str() ) ;
+    QFile loaders( sourceFileName ) ;
+    if( loaders.open( QFile::WriteOnly | QFile::Truncate ) )
     {
-        QDebug out(&loaders);
+        QTextStream out( &loaders ) ;
 
-        out.nospace() << std::string("#include \""+this->m_filename+".h\"").c_str();
+        out << "#include \"" << m_filename.c_str() << ".h\"" ;
 
-        out.nospace() << std::string("\n\n\t"+this->m_modelclass+" "+this->m_filename+"::load("+this->m_modelclass+"& model , std::string filename)\n\t{\n").c_str();
+        out << "\n\n" << m_indent << m_modelclass.c_str() << " " << m_filename.c_str() << "::load(" << m_modelclass.c_str() << "& model , std::string filename)\n" << m_indent << "{\n" ;
 
-        out.nospace() << "\t\tstd::map<std::pair<QString, QString>, QString> xmlTokens;\n";
-        out.nospace() << "\t\ttypedef std::map<std::pair<QString, QString>, QString> Dict;\n";
-        out.nospace() << "\t\ttypedef Dict::const_iterator It;\n\n";
+        out << m_indent << m_indent << "std::map<std::pair<QString, QString>, QString> xmlTokens;\n" ;
+        out << m_indent << m_indent << "typedef std::map<std::pair<QString, QString>, QString> Dict;\n" ;
+        out << m_indent << m_indent << "typedef Dict::const_iterator It;\n\n" ;
 
 
 
-        out.nospace() << "\t\tQFile* data = new QFile(filename.c_str());\n";
-        out.nospace() << "\t\tif (!data->open(QIODevice::ReadOnly | QIODevice::Text)) \n\t\t{\n";
-        out.nospace() << "\t\t\tqDebug() << \"Not read only\";\n";
-        out.nospace() << "\t\t}\n\n";
-        out.nospace() << "\t\tQXmlStreamReader readXML(data);\n";
-        out.nospace() << "\t\twhile(!readXML.atEnd() && !readXML.hasError()) \n\t\t{\n";
-        out.nospace() << "\t\t\tQXmlStreamReader::TokenType token = readXML.readNext();\n";
-        out.nospace() << "\t\t\tif(token == QXmlStreamReader::StartDocument) \n\t\t\t{\n";
-        out.nospace() << "\t\t\t\tcontinue;\n";
-        out.nospace() << "\t\t\t}\n";
-        out.nospace() << "\t\t\telse if (readXML.isEndElement() != true) \n\t\t\t{\n";
-        out.nospace() << "\t\t\t\tif(readXML.attributes().size()>2)\n";
+        out << m_indent << m_indent << "QFile* data = new QFile(filename.c_str());\n" ;
+        out << m_indent << m_indent << "if (!data->open(QIODevice::ReadOnly | QIODevice::Text)) \n" << m_indent << m_indent << "{\n" ;
+        out << m_indent << m_indent << m_indent << "qDebug() << \"Not read only\";\n" ;
+        out << m_indent << m_indent << "}\n\n" ;
+        out << m_indent << m_indent << "QXmlStreamReader readXML(data);\n" ;
+        out << m_indent << m_indent << "while(!readXML.atEnd() && !readXML.hasError()) \n" << m_indent << m_indent << "{\n" ;
+        out << m_indent << m_indent << m_indent << "QXmlStreamReader::TokenType token = readXML.readNext();\n" ;
+        out << m_indent << m_indent << m_indent << "if(token == QXmlStreamReader::StartDocument) \n" << m_indent << m_indent << m_indent << "{\n" ;
+        out << m_indent << m_indent << m_indent << m_indent << "continue;\n" ;
+        out << m_indent << m_indent << m_indent << "}\n" ;
+        out << m_indent << m_indent << m_indent << "else if (readXML.isEndElement() != true) \n" << m_indent <<m_indent << m_indent << "{\n" ;
+        out << m_indent << m_indent << m_indent << m_indent << "if(readXML.attributes().size()>2)\n" ;
 
-        out.nospace() << "\t\t\t\t\txmlTokens[std::make_pair(readXML.attributes()[0].value().toString(), readXML.attributes()[1].value().toString())] = readXML.attributes()[2].value().toString();\n";
-        out.nospace() << "\t\t\t}\n";
-        out.nospace() << "\t\t}\n\n";
+        out << m_indent << m_indent << m_indent << m_indent << m_indent << "xmlTokens[std::make_pair(readXML.attributes()[0].value().toString(), readXML.attributes()[1].value().toString())] = readXML.attributes()[2].value().toString();\n" ;
+        out << m_indent << m_indent << m_indent << "}\n" ;
+        out << m_indent << m_indent << "}\n\n" ;
 
-        for (std::map<std::pair<QString,QString>,QString>::const_iterator it= m_map.begin(); it != m_map.end(); ++it)
+        for( MapType::const_iterator it = m_map.begin() ; it != m_map.end() ; ++it )
         {
+            out << m_indent << m_indent << "tmpClassType = \"" << it->second << "\";\n" ;
+            out << m_indent << m_indent << "tmpClassName = \"" << it->first.second << "\";\n\n" ;
+            out << m_indent << m_indent << "for (It it= xmlTokens.begin(); it != xmlTokens.end(); ++it) \n" <<m_indent << m_indent << "{\n" ;
 
+            out << m_indent << m_indent << m_indent << "if((it -> first.second).compare(tmpClassName) == 0) \n" << m_indent << m_indent << m_indent << "{\n" ;
 
-            out.nospace() << "\t\ttmpClassType = " << it -> second << ";\n";
-
-            out.nospace() << "\t\ttmpClassName = " << it -> first.second << ";\n\n";
-
-            out.nospace() << "\t\tfor (It it= xmlTokens.begin(); it != xmlTokens.end(); ++it) \n\t\t{\n";
-
-            out.nospace() << "\t\t\tif((it -> first.second).compare(tmpClassName) == 0) \n\t\t\t{\n";
-
-            if (((QString)(it -> second)).compare("QString") == 0)
+            if( (it->second).compare( "QString" ) == 0 )
             {
-                out.nospace() << "\t\t\t\t\tmodel.set" << (it -> first.second).toUtf8().constData();
-                out.nospace() << "((QString)(it -> second));\n";
+                out << m_indent << m_indent << m_indent << m_indent << m_indent << "model.set" << it->first.second ;
+                out << "((QString)(it->second));\n" ;
             }
-
-            else if (((QString)(it -> second)).compare("bool") == 0)
+            else if( (it->second).compare( "bool" ) == 0 )
             {
-                out.nospace() << "\t\t\t\t\tint boolValue = ((QString)(it -> second)).toInt();\n";
-                out.nospace() << "\t\t\t\t\tmodel.set" << (it -> first.second).toUtf8().constData();
-                out.nospace() << "(static_cast<bool>(boolValue));\n";
+                out << m_indent << m_indent << m_indent << m_indent << m_indent << "int boolValue = ((QString)(it->second)).toInt();\n" ;
+                out << m_indent << m_indent << m_indent << m_indent << m_indent << "model.set" << it->first.second ;
+                out << "(static_cast<bool>(boolValue));\n" ;
             }
-
-            else if (((QString)(it -> second)).compare("double") == 0)
+            else if( (it->second).compare( "double" ) == 0 )
             {
-                out.nospace() << "\t\t\t\t\tdouble doubleValue = ((QString)(it -> second)).toDouble();\n";
-                out.nospace() << "\t\t\t\t\tmodel.set" << (it -> first.second).toUtf8().constData();
-                out.nospace() << "(doubleValue);\n";
+                out << m_indent << m_indent << m_indent << m_indent << m_indent << "double doubleValue = ((QString)(it -> second)).toDouble();\n" ;
+                out << m_indent << m_indent << m_indent << m_indent << m_indent << "model.set" << it->first.second ;
+                out << "(doubleValue);\n" ;
             }
-
-            else if (((QString)(it -> second)).compare("int") == 0)
+            else if( (it->second).compare( "int" ) == 0 )
             {
-                out.nospace() << "\t\t\t\t\tint intValue = ((QString)(it -> second)).toInt();\n";
-                out.nospace() << "\t\t\t\t\tmodel.set" << (it -> first.second).toUtf8().constData();
-                out.nospace() << "(intValue);\n";
+                out << m_indent << m_indent << m_indent << m_indent << m_indent << "int intValue = ((QString)(it->second)).toInt();\n" ;
+                out << m_indent << m_indent << m_indent << m_indent << m_indent << "model.set" << it->first.second ;
+                out << "(intValue);\n" ;
             }
-
-            out.nospace() << "\t\t\t}\n\t\t}";
-            out.nospace() << "\n\n";
+            out << m_indent << m_indent << m_indent << "}\n"<<m_indent<<m_indent<<"}" ;
+            out << "\n\n" ;
         }
 
-        out.nospace() << "\t\treturn model;";
-        out.nospace() << "\n\t}";
-
+        out << m_indent << m_indent << "return model;" ;
+        out << "\n" << m_indent << "}" ;
     }
-
-    loaders.close();
-
+    loaders.close() ;
 }
 
 

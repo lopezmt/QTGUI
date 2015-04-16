@@ -34,21 +34,11 @@
 //Class used to strip data from the dictionary and streams into a cpp file current in
 //the same directory
 class MGen{
-    const std::map<std::pair<QString,QString>,QString> & hmap;
-
-    //headers that have been used
-    std::set<QString> usedHeader;
-
-    //name of the header file to be generated
-    std::string filename;
-    //directory the file should be stored in
-    std::string directory ;
-    std::string m_prefix ;
 
 public:
-
+    typedef std::map<std::pair<QString,QString>,QString> MapType ;
     //constructor
-    MGen( std::map< std::pair< QString , QString > , QString > & hmap ,
+    MGen( MapType & hmap ,
           std::string directory = "" ,
           std::string filename = "model" ,
           std::string prefix = ""
@@ -79,11 +69,22 @@ private:
 
     void genGetSet(std::ofstream & stream,bool headeronly);
 
-    void genGet(std::map<std::pair<QString,QString>,QString>::const_iterator & it, std::ofstream & stream,bool headeronly);
+    void genGet(MapType::const_iterator & it, std::ofstream & stream,bool headeronly);
 
-    void genSet(std::map<std::pair<QString,QString>,QString>::const_iterator & it, std::ofstream & stream,bool headeronly);
+    void genSet(MapType::const_iterator & it, std::ofstream & stream,bool headeronly);
 
-
+    
+    const MapType & hmap;
+    
+    //headers that have been used
+    std::set<QString> usedHeader;
+    
+    //name of the header file to be generated
+    std::string filename;
+    //directory the file should be stored in
+    std::string directory ;
+    std::string m_prefix ;
+    std::string m_indent ;
 
 };
 

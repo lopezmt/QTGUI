@@ -8,17 +8,10 @@
 #include <QDir>
 
 class LGen{
-private:
-    std::map< std::pair< QString , QString > , QString > m_map ;
-
-    std::string m_filename ;
-    std::string m_modelclass ;
-    std::string m_directory ;
-    std::string m_prefix ;
-
 public:
+    typedef std::map< std::pair< QString , QString > , QString > MapType ;
     //    //constructor
-    LGen( std::map<std::pair<QString,QString>,QString> & hmap ,
+    LGen( MapType & hmap ,
           std::string modelclass ,
           std::string directory="",
           std::string filename = "loader",
@@ -26,6 +19,13 @@ public:
         ) ;
 
     void generateClass() ;
+private:
+    MapType m_map ;
+    std::string m_filename ;
+    std::string m_modelclass ;
+    std::string m_directory ;
+    std::string m_prefix ;
+    QString m_indent ;
 
 
 } ;
