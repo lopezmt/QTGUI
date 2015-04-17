@@ -87,9 +87,11 @@ void MainWindow::on_pushButton_2_clicked()
 
 
     ui->pre_checkBoxsdf->setChecked(m.getpre_checkBoxsdf());
-
- //   ui->comboBox->setCurrentText(m.getcomboBox());//qt4->qt5
-
+    int comboBoxIndex = ui->comboBox->findText(m.getcomboBox() ) ;
+    if( comboBoxIndex != -1 )
+    {
+      ui->comboBox->setCurrentIndex(comboBoxIndex);
+    }
     ui->doubleSpinBox->setValue(m.getdoubleSpinBox());
 
     ui->horizontalScrollBar->setValue(m.gethorizontalScrollBar());
