@@ -156,7 +156,7 @@ void LGen::generateClass()
                 out << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << "QString name = QString(\"item\") + QString::number(itemNb) + \"Name\";\n" ;
                 out << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << "std::pair<QString , QString> attributeIsChecked = currentAttributes[ 1 ];\n" ;
                 out << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << "QString isChecked = QString(\"item\") + QString::number(itemNb) + \"isChecked\";\n" ;
-                out << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << "if( !attributeName.first.compare(name) && !attributeIsChecked.first.compare(isChecked))  ;\n";
+                out << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << "if( !attributeName.first.compare(name) && !attributeIsChecked.first.compare(isChecked))\n";
                 out << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << "{\n";
                 out << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << mapName << "[ attributeName.second ] = ( attributeIsChecked.second.toInt() != 0 ? true : false ) ;\n";
                 out << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << "}\n";
