@@ -162,6 +162,7 @@ void LGen::generateClass()
                 out << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << "}\n";
                 out << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << "currentAttributes.removeFirst();\n";//the first item should be the type
                 out << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << "currentAttributes.removeFirst();\n";//the first item should be the type
+                out << m_indent << m_indent << m_indent << m_indent << m_indent << m_indent << "itemNb++;\n";//the first item should be the type
                 out << m_indent << m_indent << m_indent << m_indent << m_indent << "}\n" ;
                 out << m_indent << m_indent << m_indent << m_indent << m_indent << "model.set" << it->first.second ;
                 out << "(" << mapName << ") ;\n " ;
