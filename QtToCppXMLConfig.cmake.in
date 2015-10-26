@@ -4,7 +4,14 @@
 set(QtToCppXML_INCLUDE_DIRS "@QtToCppXML_INCLUDE_DIRS_CONFIG@")
 set(QtToCppXML_CMAKE_DIR "@QtToCppXML_CMAKE_DIR_CONFIG@")
 set(QtToCppXML_USE_FILE "@QtToCppXML_USE_FILE_CONFIG@")
-set(QT_QMAKE_EXECUTABLE "@QMAKE_CONFIG@")
+set(QT_VERSION "@QT_VERSION@")
+if(QT_VERSION STREQUAL "4")
+  set(QT_QMAKE_EXECUTABLE "@QMAKE_CONFIG@")
+elseif(QT_VERSION STREQUAL "5")
+  set(Qt5Widgets_DIR "@Qt5Widgets_DIR@")
+else()
+  message(FATAL_ERROR "Requires Qt version '4' or '5'.")
+endif()
 
 find_program(QtToCppXML_EXE
   NAMES QtToCppXML

@@ -1,5 +1,16 @@
 
-find_package(Qt4 REQUIRED)
-include(${QT_USE_FILE})
+if(NOT "${QT_VERSION}" STREQUAL "4" AND NOT "${QT_VERSION}" STREQUAL "5")
+  message(FATAL_ERROR "QT_VERSION must be set to '4' or '5'.")
+endif()
+
+if( QT_VERSION STREQUAL "4" )
+  find_package(Qt4 REQUIRED)
+  include(${QT_USE_FILE})
+elseif(QT_VERSION STREQUAL "5")
+  find_package(Qt5Widgets REQUIRED)
+else()
+  message(FATAL_ERROR "Requires Qt version '4' or '5'.")
+endif()
 
 include(${QtToCppXML_CMAKE_DIR}/QtToCppXML.cmake)
+
