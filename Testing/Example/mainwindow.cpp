@@ -73,6 +73,16 @@ void MainWindow::on_pushButton_clicked()
       itemList[ attribute ] = static_cast<bool>(currentItem->checkState() ) ;
     }
     m.setlistWidget(itemList) ;
+
+    std::map<std::pair<unsigned long,QString>,bool> itemList2 ;
+    for( unsigned long i = 0 ; i < ui->listWidget_2->count() ; i++ )
+    {
+      QListWidgetItem *currentItem = ui->listWidget_2->item(i) ;
+      std::pair<unsigned long,QString> attribute ;
+      attribute = std::make_pair(i,currentItem->text());
+      itemList2[ attribute ] = static_cast<bool>(currentItem->checkState() ) ;
+    }
+    m.setlistWidget_2(itemList2) ;
     Save_QTGUIExample save;
     std::string filename = "data1.xml";
     save.save(m,filename);
@@ -133,4 +143,15 @@ void MainWindow::on_pushButton_2_clicked()
       QListWidgetItem *item = new QListWidgetItem( it->first.second , ui->listWidget ) ;
       item->setCheckState( it->second != 0 ? Qt::Checked : Qt::Unchecked ) ;
     }
+
+    std::map<std::pair<unsigned long,QString>,bool> itemList2 ;
+    itemList2 = m.getlistWidget_2() ;
+    ui->listWidget_2->clear() ;
+    for( std::map<std::pair<unsigned long,QString>,bool>::iterator it = itemList2.begin() ; it != itemList2.end() ; it++ )
+    {
+      QListWidgetItem *item = new QListWidgetItem( it->first.second , ui->listWidget_2 ) ;
+      item->setCheckState( it->second != 0 ? Qt::Checked : Qt::Unchecked ) ;
+    }
+
+
 }
