@@ -66,6 +66,9 @@ private:
     //include additional libraries to header 
     void AdditionalIncludeLibraries( std::ofstream & headerstream , QString headerName );
 
+    //initialize variables
+    void genConstructor(std::ofstream &sourcestream);
+
     //generates fields
     void genField(std::ofstream & headerstream);
 

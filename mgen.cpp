@@ -68,12 +68,12 @@ void MGen::genHeader(std::ofstream & headerstream) {
 
     //print class keyword and the class name
     headerstream << "class "<<this->filename<<" {"<<std::endl;
-
     //generate the field
     genField(headerstream);
 
     //make getter and setters public
     headerstream <<std::endl<< "public: "<<std::endl<<std::endl;
+    headerstream << m_indent << this->filename << "();"<<std::endl;
 
     genGetSet(headerstream,true);
 
@@ -85,9 +85,43 @@ void MGen::genHeader(std::ofstream & headerstream) {
 void MGen::genSource(std::ofstream & sourcestream)
 {
     sourcestream<<"#include \""+this->filename+".h\""<<std::endl<<std::endl;
-
+    genConstructor(sourcestream);
     genGetSet(sourcestream,false);
 
+}
+
+void MGen::genConstructor(std::ofstream &sourcestream)
+{
+    //get iterator from begin
+    MapType::const_iterator it=hmap.begin();
+    sourcestream << m_indent <<this->filename + "::" + this->filename + "()" << std::endl ;
+    sourcestream << m_indent << "{" << std::endl ;
+    //while the point did not hit the end of the map
+    while(it != hmap.end())
+    {
+        if( (it->second).compare( "QString" ) == 0 )
+        {
+          sourcestream << m_indent <<m_indent <<it->first.second.toStdString() << " = \"\" ;" << std::endl ;
+        }
+        else if( (it->second).compare( "double" ) == 0 )
+        {
+          sourcestream << m_indent <<m_indent <<it->first.second.toStdString() << " = 0.0 ;" << std::endl ;
+        }
+        else if( (it->second).compare( "int" ) == 0 )
+        {
+          sourcestream << m_indent <<m_indent <<it->first.second.toStdString() << " = 0 ;" << std::endl ;
+        }
+        else if( (it->second).compare( "bool" ) == 0 )
+        {
+          sourcestream << m_indent <<m_indent <<it->first.second.toStdString() << " = false ;" << std::endl ;
+        }
+        else
+        {
+          sourcestream << m_indent <<m_indent << "// " << it->first.second.toStdString() << " : " << it->second.toStdString() << " does not require any initialization" << std::endl ;
+        }
+        it++;
+    }
+    sourcestream << "}" << std::endl << std::endl ;
 }
 
 void MGen::AdditionalIncludeLibraries( std::ofstream & headerstream , QString headerName )
