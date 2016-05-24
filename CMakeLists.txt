@@ -49,13 +49,43 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${QtToCppXML_BINARY_DIR}/bin)
 
 add_executable( QtToCppXML ${MySources} )
 target_link_libraries( QtToCppXML ${QT_LIBRARIES})
+install(PROGRAMS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/QtToCppXML DESTINATION bin COMPONENT bin)
 
 # --------------------------------------------------------------------------
 # Configure support files
 # --------------------------------------------------------------------------  
 configure_file(
-  QtToCppXML.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/QtToCppXML.cmake
+  ${QtToCppXML_SOURCE_DIR}/QtToCppXML.cmake
+  ${PROJECT_BINARY_DIR}/QtToCppXML.cmake
   @ONLY
   )
-include(GenerateQtToCppXMLConfig.cmake)
+
+configure_file(${QtToCppXML_SOURCE_DIR}/UseQtToCppXML.cmake.in
+  ${PROJECT_BINARY_DIR}/UseQtToCppXML.cmake
+  @ONLY)
+
+set(QtToCppXML_CMAKE_DIR_CONFIG ${PROJECT_BINARY_DIR})
+set(QMAKE_CONFIG ${QT_QMAKE_EXECUTABLE})
+configure_file(${QtToCppXML_SOURCE_DIR}/QtToCppXMLConfig.cmake.in
+  ${PROJECT_BINARY_DIR}/QtToCppXMLConfig.cmake @ONLY)
+
+
+if(WIN32 AND NOT CYGWIN)
+  set(DEF_INSTALL_CMAKE_DIR CMake)
+else()
+  set(DEF_INSTALL_CMAKE_DIR lib/CMake/QtToCppXML)
+endif()
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
+  "Installation directory for CMake files")
+
+install(FILES
+  "${PROJECT_BINARY_DIR}/QtToCppXML.cmake"  
+  DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+
+install(FILES
+  "${PROJECT_BINARY_DIR}/QtToCppXMLConfig.cmake"  
+  DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+
+install(FILES
+  "${PROJECT_BINARY_DIR}/UseQtToCppXML.cmake"  
+  DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
