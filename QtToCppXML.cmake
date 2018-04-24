@@ -58,7 +58,7 @@ macro(QtToCppXML)
     if( QtToCppXML_VERBOSE )
       message( WARNING "There are prefixes!" )
     endif()
-    set( PREFIXES_ARGS "${quote}-x " )
+    set( PREFIXES_ARGS "${quote}" )
     foreach( prefix ${QtToCppXML_PREFIXES} )
       set( PREFIXES_ARGS "${PREFIXES_ARGS}${prefix}," )
     endforeach()
@@ -87,7 +87,7 @@ macro(QtToCppXML)
       -l "${quote}${LoadSuffix}_${QtToCppXML_NAME}${quote}"
       -s "${quote}${SaveSuffix}_${QtToCppXML_NAME}${quote}"
       -m "${quote}${ModelSuffix}_${QtToCppXML_NAME}${quote}"
-      ${PREFIXES_ARGS}
+      -x "${quote}${PREFIXES_ARGS}${quote}"
       ${verbatim}
       )
   foreach(INPUT_SOURCE_FILE ${${SOURCES}} )
