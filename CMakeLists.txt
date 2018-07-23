@@ -34,7 +34,6 @@ endif()
 set( MySources
 lgen.cpp
 lgen.h
-main.cpp
 mgen.cpp
 mgen.h
 parse.h
@@ -43,13 +42,18 @@ sgen.cpp
 sgen.h
 )
 
-GENERATECLP(MySources QtToCppXML.xml)
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${QtToCppXML_BINARY_DIR}/bin)
-
-add_executable( QtToCppXML ${MySources} )
-target_link_libraries( QtToCppXML ${QT_LIBRARIES})
-install(PROGRAMS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/QtToCppXML DESTINATION bin COMPONENT bin)
+SEMMacroBuildCLI(
+    NAME QtToCppXML
+    ADDITIONAL_SRCS ${MySources}
+    TARGET_LIBRARIES ${QT_LIBRARIES}
+    INCLUDE_DIRECTORIES ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}
+    ARCHIVE_OUTPUT_DIRECTORY ${QtToCppXML_BINARY_DIR}/lib
+    LIBRARY_OUTPUT_DIRECTORY ${QtToCppXML_BINARY_DIR}/lib
+    RUNTIME_OUTPUT_DIRECTORY ${QtToCppXML_BINARY_DIR}/bin
+    INSTALL_ARCHIVE_DESTINATION lib
+    INSTALL_LIBRARY_DESTINATION lib
+    INSTALL_RUNTIME_DESTINATION bin
+    )
 
 # --------------------------------------------------------------------------
 # Configure support files
