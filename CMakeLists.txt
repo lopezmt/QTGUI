@@ -41,7 +41,7 @@ sgen.cpp
 sgen.h
 )
 
-if(APPLE)
+if(UNIX)
   SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 
